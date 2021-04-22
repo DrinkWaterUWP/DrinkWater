@@ -1,0 +1,69 @@
+﻿<Page
+    x:Class="DrinkWater.NotificationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DrinkWater"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <local:IndexConverter x:Name="IndexConverter"></local:IndexConverter>
+        <local:VisibleWhenZeroConverter x:Name="VisibleWhenZeroConverter" x:Key="VisibleWhenZeroConverter"></local:VisibleWhenZeroConverter>
+    </Page.Resources>
+
+    <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Width="400" Height="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="285"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="BackButton" Click="BackButton_Click"
+                Style="{StaticResource NavigationBackButtonNormalStyle}"
+                IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" 
+                ToolTipService.ToolTip="Back"/>
+
+                <Button x:Name="InfoButton" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Style="{StaticResource AccentButtonStyle}" Click="InfoButton_Click" ToolTipService.ToolTip="Information">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;"/>
+                    <Button.Background>
+                        <SolidColorBrush Opacity="0"/>
+                    </Button.Background>
+                </Button>
+
+                <ListView Grid.Row="1" Grid.ColumnSpan="2" x:Name="ScheduledNotification" ItemsSource="{x:Bind Notifications}"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                          ScrollViewer.IsVerticalRailEnabled="True"
+                          VerticalAlignment="Stretch"
+                          ScrollViewer.VerticalScrollMode="Enabled"
+                          HorizontalAlignment="Center">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Height="Auto" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Converter={StaticResource IndexConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="10"></TextBlock>
+                                    <TextBlock Grid.Column="1" Text="{Binding ScheduledDateTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="10"/>
+                                </Grid>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Header>
+                        <TextBlock Visibility="{Binding HasNoItems, Mode=TwoWay, Converter={StaticResource VisibleWhenZeroConverter}}">
+                            There is no scheduled reminder, please start the timer first.
+                        </TextBlock>
+                    </ListView.Header>
+                </ListView>
+            </Grid>
+        </StackPanel>
+    </RelativePanel>
+</Page>
