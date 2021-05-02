@@ -1,18 +1,12 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
-using Windows.UI.Notifications;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -60,13 +54,26 @@ namespace DrinkWater
         public MainPage()
         {
             InitializeComponent();
+            Application.Current.Resuming += new EventHandler<object>(App_Resuming);
             localSettings = ApplicationData.Current.LocalSettings;
-            ApplicationView.PreferredLaunchViewSize = new Size(500, 450);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+        }
+
+        private async void App_Resuming(object sender, object e)
+        {
+            await StartTimer();
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            await StartTimer();
+        }
+
+        private async Task StartTimer()
+        {
+            if (timer != null)
+            {
+                timer.Dispose();
+            }
             await Task.Run(() =>
             {
                 timer = new Timer(CheckStatus, null, 0, 1000);

@@ -1,9 +1,7 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
-using System;
-using System.Threading.Tasks;
-using Windows.ApplicationModel;
+﻿using System;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.ExtendedExecution;
+using Windows.Foundation;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -18,6 +16,8 @@ namespace DrinkWater
         public App()
         {
             this.InitializeComponent();
+            ApplicationView.PreferredLaunchViewSize = new Size(500, 450);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
