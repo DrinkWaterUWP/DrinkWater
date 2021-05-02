@@ -84,6 +84,7 @@ namespace SharedClass
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
+                                toast.ExpirationTime = generateFromDateTime.AddSeconds(5);
                             });
                         break;
                     case Actions.NotificationAndSound:
@@ -91,6 +92,7 @@ namespace SharedClass
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
+                                toast.ExpirationTime = generateFromDateTime.AddSeconds(5);
                             });
                         break;
                     default:
