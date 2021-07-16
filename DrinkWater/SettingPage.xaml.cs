@@ -57,8 +57,8 @@ namespace DrinkWater
 
         public List<ComboBoxPairs> ActionsItem { get; set; } = new List<ComboBoxPairs>
             {
-                new ComboBoxPairs("Show reminder without sound", Actions.Notification.ToString()),
-                new ComboBoxPairs("Show reminder with sound", Actions.NotificationAndSound.ToString()),
+                new ComboBoxPairs("Off", Actions.Notification.ToString()),
+                new ComboBoxPairs("On", Actions.NotificationAndSound.ToString()),
                 //new ComboBoxPairs("Notification with custom sound", Actions.NotificationAndCustomSound.ToString())
             };
 
@@ -91,6 +91,11 @@ namespace DrinkWater
                 Enum.TryParse(localSettings.Values[ActionKey].ToString(), out Actions savedAction);
                 ActionComboBox.SelectedIndex = (int)savedAction;
             }
+
+            if (localSettings.Values[NotificationTextKey] != null)
+            {
+                NotificationTextBox.Text = localSettings.Values[NotificationTextKey].ToString();
+            }
         }
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
@@ -105,7 +110,7 @@ namespace DrinkWater
             {
                 case Actions.Notification:
                     SilentNotificationTemplate
-                        .AddText("Test reminder without sound")
+                        .AddText(NotificationText)
                         .Show(toast =>
                         {
                             toast.ExpirationTime = DateTime.Now.AddSeconds(5);
@@ -113,7 +118,7 @@ namespace DrinkWater
                     break;
                 case Actions.NotificationAndSound:
                     DefaultNotificationTemplate
-                        .AddText("Test reminder with sound")
+                        .AddText(NotificationText)
                         .Show(toast =>
                         {
                             toast.ExpirationTime = DateTime.Now.AddSeconds(5);
@@ -135,6 +140,7 @@ namespace DrinkWater
             {
                 localSettings.Values[ActionKey] = ActionComboBox.SelectedValue.ToString();
                 SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                RescheduleNotification();
             }
         }
 
@@ -158,15 +164,8 @@ namespace DrinkWater
             if (IntervalMin != RemindInterval.SelectedTime?.TotalMinutes)
             {
                 IntervalMin = (int)RemindInterval.SelectedTime?.TotalMinutes;
-
-                localSettings.Values[IsTimerStarted] = true;
-                if (Notifications.Count > 0)
-                {
-                    Notifications = Notification.RemoveScheduledNotification();
-                    Notifications = Notification.ScheduleNotification(Notifications, IntervalMin, Action);
-                }
-                localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
                 SaveSuccessfullyFlyout.ShowAt(sender);
+                RescheduleNotification();
             }
         }
 
@@ -180,6 +179,38 @@ namespace DrinkWater
                     return result;
                 }
                 return Actions.Notification;
+            }
+        }
+
+        private string NotificationText
+        {
+            get
+            {
+                if (localSettings.Values[NotificationTextKey] != null)
+                {
+                    return localSettings.Values[NotificationTextKey].ToString();
+                }
+                return "Keep calm and drink water.";
+            }
+        }
+
+        private void NotificationTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (NotificationTextBox.Text != null && localSettings.Values[NotificationTextKey].ToString() != NotificationTextBox.Text)
+            {
+                localSettings.Values[NotificationTextKey] = NotificationTextBox.Text;
+                SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                RescheduleNotification();
+            }
+        }
+
+        private void RescheduleNotification()
+        {
+            if (Notifications.Count > 0)
+            {
+                Notifications = Notification.RemoveScheduledNotification();
+                Notifications = Notification.ScheduleNotification(Notifications, IntervalMin, Action, NotificationText);
+                localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
             }
         }
     }

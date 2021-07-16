@@ -49,7 +49,7 @@ namespace BackgroundTask
                 Notifications = JsonConvert.DeserializeObject<List<Notification>>(localSettings.Values[NotificationKey].ToString());
             }
             Notifications = Notification.RemoveExpiredNotification(Notifications);
-            Notifications = Notification.ScheduleNotification(Notifications, IntervalMin, Action);
+            Notifications = Notification.ScheduleNotification(Notifications, IntervalMin, Action, NotificationText);
             localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
         }
 
@@ -63,6 +63,18 @@ namespace BackgroundTask
                     return result;
                 }
                 return Actions.Notification;
+            }
+        }
+
+        private string NotificationText
+        {
+            get
+            {
+                if (localSettings.Values[NotificationTextKey] != null)
+                {
+                    return localSettings.Values[NotificationTextKey].ToString();
+                }
+                return "Keep calm and drink water.";
             }
         }
     }

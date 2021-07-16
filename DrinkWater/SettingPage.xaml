@@ -13,7 +13,7 @@
         </Flyout>
     </Page.Resources>
     <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <StackPanel Width="400" Height="300">
+        <StackPanel Width="450" Height="400">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -51,15 +51,14 @@
             <Grid Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250"></ColumnDefinition>
-                    <ColumnDefinition Width="80"></ColumnDefinition>
+                    <ColumnDefinition Width="330"></ColumnDefinition>
+                    <!--<ColumnDefinition Width="0"></ColumnDefinition>-->
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="ActionComboBox" ItemsSource="{Binding ActionsItem}" Grid.Row="0" Grid.Column="0" PlaceholderText="Select an action" Width="250" SelectionChanged="ActionComboBox_SelectionChanged">
+                <ComboBox x:Name="ActionComboBox" ItemsSource="{Binding ActionsItem}" Grid.Row="0" Grid.Column="0" PlaceholderText="Select an action" Width="330" SelectionChanged="ActionComboBox_SelectionChanged" Margin="0,0,0,20">
                     <ComboBox.Header>
-                        <TextBlock Text="Action">
+                        <TextBlock Text="Default notification sound">
                         </TextBlock>
                     </ComboBox.Header>
                     <FlyoutBase.AttachedFlyout>
@@ -68,6 +67,21 @@
                         </Flyout>
                     </FlyoutBase.AttachedFlyout>
                 </ComboBox>
+            </Grid>
+            <Grid Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="NotificationTextBox" LostFocus="NotificationTextBox_LostFocus" MaxLength="100">
+                    <TextBox.Header>
+                        <TextBlock Text="Notification text">
+                        </TextBlock>
+                    </TextBox.Header>
+                </TextBox>
                 <Button x:Name="TestButton" Margin="5,0,0,0" Grid.Row="0" Grid.Column="1" Content="Test" VerticalAlignment="Bottom" Click="TestButton_Click" Width="50">
                     <FlyoutBase.AttachedFlyout>
                         <Flyout>

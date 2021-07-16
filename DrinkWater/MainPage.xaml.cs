@@ -51,6 +51,18 @@ namespace DrinkWater
             }
         }
 
+        private string NotificationText
+        {
+            get
+            {
+                if (localSettings.Values[NotificationTextKey] != null)
+                {
+                    return localSettings.Values[NotificationTextKey].ToString();
+                }
+                return "Keep calm and drink water.";
+            }
+        }
+
         public MainPage()
         {
             InitializeComponent();
@@ -95,6 +107,8 @@ namespace DrinkWater
                 RegisterBackgroundTask();
             }
 
+            HandleVersionChange();
+
             Notifications = new List<SharedClass.Notification>();
             if (localSettings.Values[NotificationKey] != null)
             {
@@ -112,6 +126,14 @@ namespace DrinkWater
                 localSettings.Values[IsTimerStarted] = false;
                 StopButton.Visibility = Visibility.Collapsed;
                 StartButton.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void HandleVersionChange()
+        {
+            if (localSettings.Values[NotificationTextKey] == null)
+            {
+                localSettings.Values[NotificationTextKey] = "Keep calm and drink water.";
             }
         }
 
@@ -134,6 +156,13 @@ namespace DrinkWater
                 builder.Name = ScheduleNotificationTask;
                 builder.TaskEntryPoint = ScheduleNotificationTaskEntry;
                 builder.SetTrigger(new TimeTrigger(15, false));
+                builder.AddCondition(new SystemCondition(SystemConditionType.SessionConnected));
+                builder.Register();
+
+                builder = new BackgroundTaskBuilder();
+                builder.Name = ScheduleNotificationTask1;
+                builder.TaskEntryPoint = ScheduleNotificationTaskEntry1;
+                builder.SetTrigger(new SystemTrigger(SystemTriggerType.SessionConnected, false));
                 return builder.Register();
             }
             return registeredTask;
@@ -165,7 +194,7 @@ namespace DrinkWater
             StopButton.Visibility = Visibility.Visible;
             StartButton.Visibility = Visibility.Collapsed;
             Notifications = SharedClass.Notification.RemoveExpiredNotification(Notifications);
-            Notifications = SharedClass.Notification.ScheduleNotification(Notifications, IntervalMin, Action);
+            Notifications = SharedClass.Notification.ScheduleNotification(Notifications, IntervalMin, Action, NotificationText);
             localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }

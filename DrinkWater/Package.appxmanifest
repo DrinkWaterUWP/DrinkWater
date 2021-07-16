@@ -9,7 +9,7 @@
   <Identity
     Name="15722UsefulApp.DrinkWater"
     Publisher="CN=BF18CC4F-2F9D-43F9-9BF7-0E949EE3057D"
-    Version="1.0.17.0" />
+    Version="1.0.24.0" />
 
   <mp:PhoneIdentity PhoneProductId="c4d813d0-37aa-42a2-80ed-e51d5539ee59" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -43,6 +43,7 @@
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.ScheduleNotification">
           <BackgroundTasks>
+            <Task Type="systemEvent" />
             <Task Type="timer" />
           </BackgroundTasks>
         </Extension>

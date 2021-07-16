@@ -13,10 +13,13 @@ namespace SharedClass
         }
         public static string ActionKey { get { return "Action"; } }
         public static string NotificationKey { get { return "Notification"; } }
+        public static string NotificationTextKey { get { return "NotificationText"; } }
         public static string ReminderIntervalMinKey { get { return "RemindIntervalMin"; } }
         public static string IsTimerStarted { get { return "IsTimerStarted"; } }
         public static string ScheduleNotificationTask { get { return "ScheduleNotificationTask"; } }
         public static string ScheduleNotificationTaskEntry { get { return "BackgroundTask.ScheduleNotification"; } }
+        public static string ScheduleNotificationTask1 { get { return "ScheduleNotificationTask1"; } }
+        public static string ScheduleNotificationTaskEntry1 { get { return "BackgroundTask.ScheduleNotification"; } }
         public static string IsFirstTimeKey { get { return "IsFirstTime"; } }
         public static ToastContentBuilder DefaultNotificationTemplate
         {
@@ -24,7 +27,6 @@ namespace SharedClass
             {
                 return new ToastContentBuilder()
                         .AddText("Drink Water")
-                        .AddText("Keep calm and drink water.")
                         .SetToastDuration(ToastDuration.Short)
                         .SetToastScenario(ToastScenario.Default);
             }
@@ -35,7 +37,6 @@ namespace SharedClass
             {
                 return new ToastContentBuilder()
                         .AddText("Drink Water")
-                        .AddText("Keep calm and drink water.")
                         .AddAudio(new Uri("ms-appx:///Assets/Audio/no_sound.mp3"))
                         .SetToastDuration(ToastDuration.Short)
                         .SetToastScenario(ToastScenario.Default);

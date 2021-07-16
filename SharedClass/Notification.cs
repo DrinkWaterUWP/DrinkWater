@@ -19,7 +19,7 @@ namespace SharedClass
             ScheduledDateTime = scheduledDateTime;
         }
 
-        public static List<Notification> ScheduleNotification(List<Notification> notifications, int intervalMin, Actions action)
+        public static List<Notification> ScheduleNotification(List<Notification> notifications, int intervalMin, Actions action, string notificatoinText)
         {
             int numberOfNotification = 0;
             DateTime lastNotificationScheduledDateTime;
@@ -81,6 +81,7 @@ namespace SharedClass
                 {
                     case Actions.Notification:
                         SilentNotificationTemplate
+                            .AddText(notificatoinText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
@@ -89,6 +90,7 @@ namespace SharedClass
                         break;
                     case Actions.NotificationAndSound:
                         DefaultNotificationTemplate
+                            .AddText(notificatoinText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
