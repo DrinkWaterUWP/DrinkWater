@@ -60,7 +60,7 @@
                     </ListView.ItemTemplate>
                     <ListView.Header>
                         <TextBlock Visibility="{Binding HasNoItems, Mode=TwoWay, Converter={StaticResource VisibleWhenZeroConverter}}">
-                            There is no scheduled reminder, please start the timer first.
+                            There is no scheduled notification, please start the timer first.
                         </TextBlock>
                     </ListView.Header>
                 </ListView>

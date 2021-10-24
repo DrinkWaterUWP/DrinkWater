@@ -26,7 +26,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock x:Name="TimerCountdown" FontSize="50" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="00:00:00" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
 
-                <Button x:Name="NotificationButton" Grid.Row="1" Grid.Column="0" Click="NotificationButton_Click" ToolTipService.ToolTip="Scheduled Reminder" HorizontalAlignment="Right">
+                <Button x:Name="NotificationButton" Grid.Row="1" Grid.Column="0" Click="NotificationButton_Click" ToolTipService.ToolTip="Scheduled Notification" HorizontalAlignment="Right">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA8F;"/>
                     <Button.Background>
                         <SolidColorBrush Opacity="0"/>
