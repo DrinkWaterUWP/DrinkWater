@@ -12,12 +12,13 @@
         <local:VisibleWhenZeroConverter x:Name="VisibleWhenZeroConverter" x:Key="VisibleWhenZeroConverter"></local:VisibleWhenZeroConverter>
     </Page.Resources>
 
-    <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <StackPanel Width="400" Height="300">
+    <ScrollViewer Width="500" Height="500">
+        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="285"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="350"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -42,7 +43,7 @@
                           ScrollViewer.IsVerticalRailEnabled="True"
                           VerticalAlignment="Stretch"
                           ScrollViewer.VerticalScrollMode="Enabled"
-                          HorizontalAlignment="Center">
+                          HorizontalAlignment="Center" Margin="0,0,0,0">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Height="Auto" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -66,4 +67,6 @@
             </Grid>
         </StackPanel>
     </RelativePanel>
+    </ScrollViewer>
+
 </Page>
