@@ -12,78 +12,66 @@
             <TextBlock Text="Setting saved successfully."></TextBlock>
         </Flyout>
     </Page.Resources>
-    <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ScrollViewer>
-            <StackPanel Width="450" Height="400">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-
-                    <Button x:Name="BackButton" Click="BackButton_Click"
+    <ScrollViewer>
+        <StackPanel Width="450" Height="400">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="BackButton" Click="BackButton_Click"
                 Style="{StaticResource NavigationBackButtonNormalStyle}"
                 IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" 
                 ToolTipService.ToolTip="Back"/>
-                </Grid>
-                <Grid Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            </Grid>
+            <Grid Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TimePicker x:Name="RemindInterval" Grid.Column="0" Margin="0 20,0,20" Grid.ColumnSpan="2" ClockIdentifier="24HourClock" HorizontalAlignment="Left" Width="305" SelectedTimeChanged="RemindInterval_SelectedTimeChanged">
+                    <TimePicker.Header>
+                        <TextBlock Text="Time interval to drink water" Margin="0,0,0,0">
+                        </TextBlock>
+                    </TimePicker.Header>
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout>
+                            <TextBlock Text="Please select at least 1 minute of time interval." />
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </TimePicker>
+                <ComboBox x:Name="ActionComboBox" ItemsSource="{Binding ActionsItem}" Grid.Row="1" Grid.Column="0" PlaceholderText="Select an action" Width="330" SelectionChanged="ActionComboBox_SelectionChanged" Margin="0,0,0,20">
+                    <ComboBox.Header>
+                        <TextBlock Text="Default notification sound">
+                        </TextBlock>
+                    </ComboBox.Header>
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout>
+                            <TextBlock Text="Please select an action." />
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </ComboBox>
+                <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250"></ColumnDefinition>
-                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="10*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TimePicker x:Name="RemindInterval" Grid.Column="0" Margin="0 20,0,20" Grid.ColumnSpan="2" ClockIdentifier="24HourClock" HorizontalAlignment="Left" Width="305" SelectedTimeChanged="RemindInterval_SelectedTimeChanged">
-                        <TimePicker.Header>
-                            <TextBlock Text="Time interval to drink water" Margin="0,0,0,0">
-                            </TextBlock>
-                        </TimePicker.Header>
-                        <FlyoutBase.AttachedFlyout>
-                            <Flyout>
-                                <TextBlock Text="Please select at least 1 minute of time interval." />
-                            </Flyout>
-                        </FlyoutBase.AttachedFlyout>
-                    </TimePicker>
-                </Grid>
-                <Grid Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="330"></ColumnDefinition>
-                        <!--<ColumnDefinition Width="0"></ColumnDefinition>-->
-                    </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="ActionComboBox" ItemsSource="{Binding ActionsItem}" Grid.Row="0" Grid.Column="0" PlaceholderText="Select an action" Width="330" SelectionChanged="ActionComboBox_SelectionChanged" Margin="0,0,0,20">
-                        <ComboBox.Header>
-                            <TextBlock Text="Default notification sound">
-                            </TextBlock>
-                        </ComboBox.Header>
-                        <FlyoutBase.AttachedFlyout>
-                            <Flyout>
-                                <TextBlock Text="Please select an action." />
-                            </Flyout>
-                        </FlyoutBase.AttachedFlyout>
-                    </ComboBox>
-                </Grid>
-                <Grid Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250"></ColumnDefinition>
-                        <ColumnDefinition Width="80"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="NotificationTextBox" LostFocus="NotificationTextBox_LostFocus" MaxLength="100">
+                    <TextBox x:Name="NotificationTextBox" LostFocus="NotificationTextBox_LostFocus">
                         <TextBox.Header>
                             <TextBlock Text="Notification text">
                             </TextBlock>
                         </TextBox.Header>
                     </TextBox>
-                    <Button x:Name="TestButton" Margin="5,0,0,0" Grid.Row="0" Grid.Column="1" Content="Test" VerticalAlignment="Bottom" Click="TestButton_Click" Width="50">
+                    <Button x:Name="TestButton" Margin="5,0,0,0" Grid.Row="0" Grid.Column="1" Content="Test" VerticalAlignment="Bottom" Click="TestButton_Click">
                         <FlyoutBase.AttachedFlyout>
                             <Flyout>
                                 <TextBlock Text="Please select an action to test." />
@@ -91,11 +79,11 @@
                         </FlyoutBase.AttachedFlyout>
                     </Button>
                 </Grid>
-                <TextBlock Margin="20" TextAlignment="Start" HorizontalAlignment="Center" VerticalAlignment="Center">
+            </Grid>
+            <TextBlock Margin="20" TextAlignment="Start" HorizontalAlignment="Center" VerticalAlignment="Center">
                 Report a bug<LineBreak/>
                 <Hyperlink NavigateUri="https://github.com/DrinkWaterUWP/DrinkWater/issues">https://github.com/DrinkWaterUWP/DrinkWater/issues</Hyperlink>
-                </TextBlock>
-            </StackPanel>
-        </ScrollViewer>
-    </RelativePanel>
+            </TextBlock>
+        </StackPanel>
+    </ScrollViewer>
 </Page>
