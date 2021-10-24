@@ -11,9 +11,17 @@ namespace SharedClass
             NotificationAndSound,
             NotificationAndCustomSound
         }
+        public enum NotificationModeEnum
+        {
+            Default,
+            Schedule,
+        }
         public static string ActionKey { get { return "Action"; } }
         public static string NotificationKey { get { return "Notification"; } }
         public static string NotificationTextKey { get { return "NotificationText"; } }
+        public static string NotificationMode { get { return "NotificationMode"; } }
+        public static string NotificationScheduleStartTime { get { return "NotificationScheduleStartTime"; } }
+        public static string NotificationScheduleEndTime { get { return "NotificationScheduleEndTime"; } }
         public static string ReminderIntervalMinKey { get { return "RemindIntervalMin"; } }
         public static string IsTimerStarted { get { return "IsTimerStarted"; } }
         public static string ScheduleNotificationTask { get { return "ScheduleNotificationTask"; } }

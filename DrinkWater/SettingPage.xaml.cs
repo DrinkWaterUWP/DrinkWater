@@ -213,5 +213,10 @@ namespace DrinkWater
                 localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
             }
         }
+
+        private void AdvanceSetting_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(AdvanceSettingPage));
+        }
     }
 }
