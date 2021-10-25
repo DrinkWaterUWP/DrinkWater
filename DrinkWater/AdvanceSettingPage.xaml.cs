@@ -32,10 +32,41 @@ namespace DrinkWater
 
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private async void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-            rootFrame.GoBack();
+            if ((bool)rdoSchedule.IsChecked && TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) < 0 &&
+                (LocalSettings.NotificationMode.ToString() != NotificationModeEnum.Schedule.ToString() ||
+                TimeSpan.Compare((TimeSpan)LocalSettings.StartTime, (TimeSpan)StartSchedule.SelectedTime) != 0 ||
+                TimeSpan.Compare((TimeSpan)LocalSettings.EndTime, (TimeSpan)EndSchedule.SelectedTime) != 0))
+            {
+                ContentDialog unsavedSettingDialog = new ContentDialog
+                {
+                    Title = "Setting modified",
+                    Content = "Do you want to save it?",
+                    PrimaryButtonText = "Save",
+                    CloseButtonText = "Discard"
+                };
+
+                ContentDialogResult result = await unsavedSettingDialog.ShowAsync();
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    LocalSettings.NotificationMode = NotificationModeEnum.Schedule;
+                    LocalSettings.StartTime = StartSchedule.SelectedTime;
+                    LocalSettings.EndTime = EndSchedule.SelectedTime;
+                    SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                    rootFrame.GoBack();
+                }
+                else
+                {
+                    rootFrame.GoBack();
+                }
+            }
+            else
+            {
+                rootFrame.GoBack();
+            }
         }
 
         private void NotificationModeRadioButton_Checked(object sender, RoutedEventArgs e)
