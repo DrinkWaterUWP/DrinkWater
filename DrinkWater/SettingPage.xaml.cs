@@ -11,7 +11,6 @@ namespace DrinkWater
 {
     public sealed partial class SettingPage : Page
     {
-        ApplicationDataContainer localSettings;
         Notification Notification;
         LocalSettings LocalSettings;
 
@@ -26,7 +25,6 @@ namespace DrinkWater
         public SettingPage()
         {
             InitializeComponent();
-            localSettings = ApplicationData.Current.LocalSettings;
             LocalSettings = new LocalSettings();
             Notification = new Notification();
 
@@ -38,22 +36,13 @@ namespace DrinkWater
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (localSettings.Values[ReminderIntervalMinKey] != null)
-            {
-                double.TryParse(localSettings.Values[ReminderIntervalMinKey].ToString(), out double interval);
-                RemindInterval.SelectedTime = TimeSpan.FromMinutes(interval);
-            }
+            double.TryParse(LocalSettings.IntervalMin.ToString(), out double interval);
+            RemindInterval.SelectedTime = TimeSpan.FromMinutes(interval);
 
-            if (localSettings.Values[ActionKey] != null)
-            {
-                Enum.TryParse(localSettings.Values[ActionKey].ToString(), out Actions savedAction);
-                ActionComboBox.SelectedIndex = (int)savedAction;
-            }
+            Enum.TryParse(LocalSettings.Action.ToString(), out Actions savedAction);
+            ActionComboBox.SelectedIndex = (int)savedAction;
 
-            if (localSettings.Values[NotificationTextKey] != null)
-            {
-                NotificationTextBox.Text = localSettings.Values[NotificationTextKey].ToString();
-            }
+            NotificationTextBox.Text = LocalSettings.NotificationText;
         }
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
@@ -94,9 +83,9 @@ namespace DrinkWater
                 FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
                 return;
             }
-            if (localSettings.Values[ActionKey].ToString() != ActionComboBox.SelectedValue.ToString())
+            if (LocalSettings.Action.ToString() != ActionComboBox.SelectedValue.ToString())
             {
-                localSettings.Values[ActionKey] = ActionComboBox.SelectedValue.ToString();
+                LocalSettings.Action = (Actions)Enum.Parse(typeof(Actions), ActionComboBox.SelectedValue.ToString());
                 SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
                 Notification.RescheduleNotification();
             }
@@ -115,10 +104,6 @@ namespace DrinkWater
                 FlyoutBase.ShowAttachedFlyout(sender);
                 return;
             }
-            if (localSettings == null)
-            {
-                localSettings = ApplicationData.Current.LocalSettings;
-            }
             if (LocalSettings.IntervalMin != RemindInterval.SelectedTime?.TotalMinutes)
             {
                 LocalSettings.IntervalMin = (int)RemindInterval.SelectedTime?.TotalMinutes;
@@ -129,9 +114,9 @@ namespace DrinkWater
 
         private void NotificationTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (NotificationTextBox.Text != null && localSettings.Values[NotificationTextKey].ToString() != NotificationTextBox.Text)
+            if (NotificationTextBox.Text != null && LocalSettings.NotificationText != NotificationTextBox.Text)
             {
-                localSettings.Values[NotificationTextKey] = NotificationTextBox.Text;
+                LocalSettings.NotificationText = NotificationTextBox.Text;
                 SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
                 Notification.RescheduleNotification();
             }

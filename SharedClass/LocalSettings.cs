@@ -62,6 +62,10 @@ namespace SharedClass
                 }
                 return "Keep calm and drink water.";
             }
+            set
+            {
+                localSettings.Values[NotificationTextKey] = value;
+            }
         }
 
         public NotificationModeEnum NotificationMode
