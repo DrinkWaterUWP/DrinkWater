@@ -1,5 +1,6 @@
 ﻿using SharedClass;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
@@ -19,6 +20,7 @@ namespace DrinkWater
         Timer timer;
         Notification Notification;
         LocalSettings LocalSettings;
+        List<NotificationModel> Notifications;
 
         public MainPage()
         {
@@ -26,6 +28,7 @@ namespace DrinkWater
             Application.Current.Resuming += new EventHandler<object>(App_Resuming);
             LocalSettings = new LocalSettings();
             Notification = new Notification();
+            Notifications = LocalSettings.Notifications;
         }
 
         private async void App_Resuming(object sender, object e)
@@ -70,7 +73,7 @@ namespace DrinkWater
             {
                 StopButton.Visibility = Visibility.Visible;
                 StartButton.Visibility = Visibility.Collapsed;
-                if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && LocalSettings.Notifications.Count == 0)
+                if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && Notifications.Count == 0)
                 {
                     NotificationModeMessage.Text = $"You have schedule to send notification\nfrom {DateTime.Today.Add((TimeSpan)LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add((TimeSpan)LocalSettings.EndTime):hh:mm tt}"; 
                 }
@@ -85,9 +88,10 @@ namespace DrinkWater
         private DateTime? GetNextScheduledNotificationDateTime()
         {
             Notification.RemoveExpiredNotification();
-            if (LocalSettings.Notifications.Count > 0)
+            Notifications = LocalSettings.Notifications;
+            if (Notifications.Count > 0)
             {
-                return LocalSettings.Notifications[0].ScheduledDateTime;
+                return Notifications[0].ScheduledDateTime;
             }
             return null;
         }

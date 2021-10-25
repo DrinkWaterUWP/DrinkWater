@@ -26,16 +26,25 @@ namespace SharedClass
             DateTime lastNotificationScheduledDateTime;
             DateTime targetNotificationScheduledDateTime;
             DateTime generateFromDateTime = DateTime.Now;
-            if (LocalSettings.Notifications.Count > 0)
+
+            var notifications = LocalSettings.Notifications;
+            var intervalMin = LocalSettings.IntervalMin;
+            var startTime = LocalSettings.StartTime;
+            var endTime = LocalSettings.EndTime;
+            var notificationMode = LocalSettings.NotificationMode;
+            var action = LocalSettings.Action;
+            var notificationText = LocalSettings.NotificationText;
+
+            if (notifications.Count > 0)
             {
-                lastNotificationScheduledDateTime = LocalSettings.Notifications[LocalSettings.Notifications.Count - 1].ScheduledDateTime;
-                if (LocalSettings.IntervalMin >= 15)
+                lastNotificationScheduledDateTime = notifications[notifications.Count - 1].ScheduledDateTime;
+                if (intervalMin >= 15)
                 {
-                    targetNotificationScheduledDateTime = LocalSettings.Notifications[0].ScheduledDateTime.AddMinutes(LocalSettings.IntervalMin * 2);
+                    targetNotificationScheduledDateTime = notifications[0].ScheduledDateTime.AddMinutes(intervalMin * 2);
                 }
-                else if (LocalSettings.IntervalMin > 0 && LocalSettings.IntervalMin < 15)
+                else if (intervalMin > 0 && intervalMin < 15)
                 {
-                    targetNotificationScheduledDateTime = LocalSettings.Notifications[0].ScheduledDateTime.AddMinutes(15 / LocalSettings.IntervalMin * 2);
+                    targetNotificationScheduledDateTime = notifications[0].ScheduledDateTime.AddMinutes(15 / intervalMin * 2);
                 }
                 else
                 {
@@ -55,33 +64,32 @@ namespace SharedClass
                     while (temp.CompareTo(targetNotificationScheduledDateTime) < 0)
                     {
                         numberOfNotification++;
-                        temp = temp.AddMinutes(LocalSettings.IntervalMin);
+                        temp = temp.AddMinutes(intervalMin);
                     }
                 }
 
             }
             else
             {
-                if (LocalSettings.IntervalMin >= 15)
+                if (intervalMin >= 15)
                 {
                     // generate 2 notification ahead
                     numberOfNotification = 2;
                 }
                 else
                 {
-                    numberOfNotification = 15 / LocalSettings.IntervalMin * 2;
+                    numberOfNotification = 15 / intervalMin * 2;
                 }
             }
 
-            var notifications = new List<NotificationModel>();
             for (int i = 0; i < numberOfNotification; i++)
             {
                 var guid = Guid.NewGuid().ToString();
-                generateFromDateTime = generateFromDateTime.AddMinutes(LocalSettings.IntervalMin);
+                generateFromDateTime = generateFromDateTime.AddMinutes(intervalMin);
                 if (
-                    LocalSettings.NotificationMode == NotificationModeEnum.Schedule &&
-                    (TimeSpan.Compare(generateFromDateTime.TimeOfDay, (TimeSpan)LocalSettings.StartTime) < 0 ||
-                    TimeSpan.Compare(generateFromDateTime.TimeOfDay, (TimeSpan)LocalSettings.EndTime) > 0))
+                    notificationMode == NotificationModeEnum.Schedule &&
+                    (TimeSpan.Compare(generateFromDateTime.TimeOfDay, startTime) < 0 ||
+                    TimeSpan.Compare(generateFromDateTime.TimeOfDay, endTime) > 0))
                 {
                     continue; // skip schedule when not in schedule period
                 }
@@ -89,11 +97,11 @@ namespace SharedClass
                     ScheduledDateTime = generateFromDateTime,
                     Tag = guid
                 });
-                switch (LocalSettings.Action)
+                switch (action)
                 {
                     case Actions.Notification:
                         SilentNotificationTemplate
-                            .AddText(LocalSettings.NotificationText)
+                            .AddText(notificationText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
@@ -102,7 +110,7 @@ namespace SharedClass
                         break;
                     case Actions.NotificationAndSound:
                         DefaultNotificationTemplate
-                            .AddText(LocalSettings.NotificationText)
+                            .AddText(notificationText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;

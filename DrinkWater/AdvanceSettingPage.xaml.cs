@@ -52,11 +52,7 @@ namespace DrinkWater
 
                 if (result == ContentDialogResult.Primary)
                 {
-                    LocalSettings.NotificationMode = NotificationModeEnum.Schedule;
-                    LocalSettings.StartTime = StartSchedule.SelectedTime;
-                    LocalSettings.EndTime = EndSchedule.SelectedTime;
-                    SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
-                    Notification.RescheduleNotification();
+                    SaveScheduleSetting();
                     rootFrame.GoBack();
                 }
                 else
@@ -96,26 +92,21 @@ namespace DrinkWater
 
         private void SaveScheduleButton_Click(object sender, RoutedEventArgs e)
         {
-            if (StartSchedule.SelectedTime == null)
-            {
-                FlyoutBase.ShowAttachedFlyout(StartSchedule);
-                return;
-            }
-            if (EndSchedule.SelectedTime == null)
-            {
-                FlyoutBase.ShowAttachedFlyout(EndSchedule);
-                return;
-            }
+            SaveScheduleSetting();
+        }
+
+        private void SaveScheduleSetting()
+        {
             if (TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) >= 0)
             {
-                FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+                FlyoutBase.ShowAttachedFlyout(SaveScheduleButton);
             }
             else
             {
                 LocalSettings.NotificationMode = NotificationModeEnum.Schedule;
-                LocalSettings.StartTime = StartSchedule.SelectedTime;
-                LocalSettings.EndTime = EndSchedule.SelectedTime;
-                SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                LocalSettings.StartTime = (TimeSpan)StartSchedule.SelectedTime;
+                LocalSettings.EndTime = (TimeSpan)EndSchedule.SelectedTime;
+                SaveSuccessfullyFlyout.ShowAt(SaveScheduleButton);
                 Notification.RescheduleNotification();
             }
         }

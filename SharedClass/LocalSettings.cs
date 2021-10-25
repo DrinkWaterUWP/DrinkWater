@@ -85,7 +85,7 @@ namespace SharedClass
             }
         }
 
-        public TimeSpan? StartTime
+        public TimeSpan StartTime
         {
             get
             {
@@ -102,7 +102,7 @@ namespace SharedClass
             }
         }
 
-        public TimeSpan? EndTime
+        public TimeSpan EndTime
         {
             get
             {
