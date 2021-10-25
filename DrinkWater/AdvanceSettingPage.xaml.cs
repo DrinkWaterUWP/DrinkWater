@@ -56,6 +56,7 @@ namespace DrinkWater
                     LocalSettings.StartTime = StartSchedule.SelectedTime;
                     LocalSettings.EndTime = EndSchedule.SelectedTime;
                     SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                    Notification.RescheduleNotification();
                     rootFrame.GoBack();
                 }
                 else
