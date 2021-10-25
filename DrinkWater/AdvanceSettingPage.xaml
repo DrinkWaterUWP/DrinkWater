@@ -13,14 +13,14 @@
         </Flyout>
     </Page.Resources>
     <ScrollViewer Width="500" Height="500">
-        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Top">
             <StackPanel>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="500"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button x:Name="BackButton" Click="BackButton_Click"
                 Style="{StaticResource NavigationBackButtonNormalStyle}"
@@ -28,7 +28,7 @@
                 ToolTipService.ToolTip="Back"/>
                 </Grid>
 
-                <Grid Margin="20,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400">
+                <Grid Margin="40,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -56,7 +56,7 @@
                         <RadioButton Grid.Row="2" x:Name="rdoSchedule" Content="Schedule" GroupName="Notification mode" Checked="NotificationModeRadioButton_Checked" IsChecked="{x:Bind ViewModel.rdoScheduleChecked, Mode=TwoWay}" Margin="0,0,0,20"></RadioButton>
                     </Grid>
                 </Grid>
-                <Grid Margin="20,0" x:Name="ScheduleGrid" Visibility="Visible">
+                <Grid Margin="40,0" x:Name="ScheduleGrid" Visibility="Visible">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>

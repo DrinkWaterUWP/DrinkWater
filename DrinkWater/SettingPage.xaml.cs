@@ -1,16 +1,10 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
-using Newtonsoft.Json;
-using SharedClass;
+﻿using SharedClass;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Windows.ApplicationModel;
 using Windows.Storage;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Navigation;
 using static SharedClass.Constant;
 
 namespace DrinkWater
@@ -18,42 +12,9 @@ namespace DrinkWater
     public sealed partial class SettingPage : Page
     {
         ApplicationDataContainer localSettings;
-        List<Notification> Notifications;
+        Notification Notification;
+        LocalSettings LocalSettings;
 
-        public int IntervalMin
-        {
-            //#if DEBUG
-            //            get
-            //            {
-            //                return 10;
-            //            }
-            //#else
-            get
-            {
-                if (localSettings.Values[ReminderIntervalMinKey] != null)
-                {
-                    int.TryParse(localSettings.Values[ReminderIntervalMinKey].ToString(), out int interval);
-                    return interval;
-                }
-                else
-                {
-                    return 60;
-                }
-            }
-            //#endif
-            set
-            {
-                uint interval = 0;
-                if (localSettings.Values[ReminderIntervalMinKey] != null)
-                {
-                    uint.TryParse(localSettings.Values[ReminderIntervalMinKey].ToString(), out interval);
-                }
-                if (interval != value)
-                {
-                    localSettings.Values[ReminderIntervalMinKey] = value;
-                }
-            }
-        }
 
         public List<ComboBoxPairs> ActionsItem { get; set; } = new List<ComboBoxPairs>
             {
@@ -66,15 +27,12 @@ namespace DrinkWater
         {
             InitializeComponent();
             localSettings = ApplicationData.Current.LocalSettings;
+            LocalSettings = new LocalSettings();
+            Notification = new Notification();
+
             DataContext = this;
             ActionComboBox.DisplayMemberPath = "Key";
             ActionComboBox.SelectedValuePath = "Value";
-            Notifications = new List<Notification>();
-            if (localSettings.Values[NotificationKey] != null)
-            {
-                Notifications = JsonConvert.DeserializeObject<List<Notification>>(localSettings.Values[NotificationKey].ToString());
-            }
-            Notifications = Notification.RemoveExpiredNotification(Notifications);
         }
 
 
@@ -110,7 +68,7 @@ namespace DrinkWater
             {
                 case Actions.Notification:
                     SilentNotificationTemplate
-                        .AddText(NotificationText)
+                        .AddText(LocalSettings.NotificationText)
                         .Show(toast =>
                         {
                             toast.ExpirationTime = DateTime.Now.AddSeconds(5);
@@ -118,7 +76,7 @@ namespace DrinkWater
                     break;
                 case Actions.NotificationAndSound:
                     DefaultNotificationTemplate
-                        .AddText(NotificationText)
+                        .AddText(LocalSettings.NotificationText)
                         .Show(toast =>
                         {
                             toast.ExpirationTime = DateTime.Now.AddSeconds(5);
@@ -140,7 +98,7 @@ namespace DrinkWater
             {
                 localSettings.Values[ActionKey] = ActionComboBox.SelectedValue.ToString();
                 SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
-                RescheduleNotification();
+                Notification.RescheduleNotification();
             }
         }
 
@@ -161,36 +119,11 @@ namespace DrinkWater
             {
                 localSettings = ApplicationData.Current.LocalSettings;
             }
-            if (IntervalMin != RemindInterval.SelectedTime?.TotalMinutes)
+            if (LocalSettings.IntervalMin != RemindInterval.SelectedTime?.TotalMinutes)
             {
-                IntervalMin = (int)RemindInterval.SelectedTime?.TotalMinutes;
+                LocalSettings.IntervalMin = (int)RemindInterval.SelectedTime?.TotalMinutes;
                 SaveSuccessfullyFlyout.ShowAt(sender);
-                RescheduleNotification();
-            }
-        }
-
-        private Actions Action
-        {
-            get
-            {
-                if (localSettings.Values[ActionKey] != null)
-                {
-                    Enum.TryParse(localSettings.Values[ActionKey].ToString(), out Actions result);
-                    return result;
-                }
-                return Actions.Notification;
-            }
-        }
-
-        private string NotificationText
-        {
-            get
-            {
-                if (localSettings.Values[NotificationTextKey] != null)
-                {
-                    return localSettings.Values[NotificationTextKey].ToString();
-                }
-                return "Keep calm and drink water.";
+                Notification.RescheduleNotification();
             }
         }
 
@@ -200,17 +133,7 @@ namespace DrinkWater
             {
                 localSettings.Values[NotificationTextKey] = NotificationTextBox.Text;
                 SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
-                RescheduleNotification();
-            }
-        }
-
-        private void RescheduleNotification()
-        {
-            if (Notifications.Count > 0)
-            {
-                Notifications = Notification.RemoveScheduledNotification();
-                Notifications = Notification.ScheduleNotification(Notifications, IntervalMin, Action, NotificationText);
-                localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
+                Notification.RescheduleNotification();
             }
         }
 

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Notifications;
 using static SharedClass.Constant;
 
@@ -11,35 +9,38 @@ namespace SharedClass
 {
     public class Notification
     {
-        public string Tag { get; set; }
-        public DateTime ScheduledDateTime { get; set; }
-        public Notification(string tag, DateTime scheduledDateTime)
+        LocalSettings LocalSettings;
+
+        public Notification()
         {
-            Tag = tag;
-            ScheduledDateTime = scheduledDateTime;
+            LocalSettings = new LocalSettings();
         }
 
-        public static List<Notification> ScheduleNotification(List<Notification> notifications, int intervalMin, Actions action, string notificatoinText)
+        public void ScheduleNotification()
         {
+            if (!LocalSettings.IsTimerStarted)
+            {
+                return;
+            }
             int numberOfNotification = 0;
             DateTime lastNotificationScheduledDateTime;
             DateTime targetNotificationScheduledDateTime;
             DateTime generateFromDateTime = DateTime.Now;
-            if (notifications.Count > 0)
+            if (LocalSettings.Notifications.Count > 0)
             {
-                lastNotificationScheduledDateTime = notifications[notifications.Count - 1].ScheduledDateTime;
-                if (intervalMin >= 15)
+                lastNotificationScheduledDateTime = LocalSettings.Notifications[LocalSettings.Notifications.Count - 1].ScheduledDateTime;
+                if (LocalSettings.IntervalMin >= 15)
                 {
-                    targetNotificationScheduledDateTime = notifications[0].ScheduledDateTime.AddMinutes(intervalMin * 2);
+                    targetNotificationScheduledDateTime = LocalSettings.Notifications[0].ScheduledDateTime.AddMinutes(LocalSettings.IntervalMin * 2);
                 }
-                else if (intervalMin > 0 && intervalMin < 15)
+                else if (LocalSettings.IntervalMin > 0 && LocalSettings.IntervalMin < 15)
                 {
-                    targetNotificationScheduledDateTime = notifications[0].ScheduledDateTime.AddMinutes(15 / intervalMin * 2);
+                    targetNotificationScheduledDateTime = LocalSettings.Notifications[0].ScheduledDateTime.AddMinutes(15 / LocalSettings.IntervalMin * 2);
                 }
                 else
                 {
                     // IntervalMin <= 0
-                    return notifications;
+                    return;
                 }
                 // decide schedule how many notification
                 // by finding out the time of 2 notification ahead
@@ -50,38 +51,49 @@ namespace SharedClass
                 else
                 {
                     generateFromDateTime = lastNotificationScheduledDateTime;
-                    var temp = lastNotificationScheduledDateTime;
+                    DateTime temp = lastNotificationScheduledDateTime;
                     while (temp.CompareTo(targetNotificationScheduledDateTime) < 0)
                     {
                         numberOfNotification++;
-                        temp = temp.AddMinutes(intervalMin);
+                        temp = temp.AddMinutes(LocalSettings.IntervalMin);
                     }
                 }
 
             }
             else
             {
-                if (intervalMin >= 15)
+                if (LocalSettings.IntervalMin >= 15)
                 {
                     // generate 2 notification ahead
                     numberOfNotification = 2;
                 }
                 else
                 {
-                    numberOfNotification = 15 / intervalMin * 2;
+                    numberOfNotification = 15 / LocalSettings.IntervalMin * 2;
                 }
             }
 
+            var notifications = new List<NotificationModel>();
             for (int i = 0; i < numberOfNotification; i++)
             {
                 var guid = Guid.NewGuid().ToString();
-                generateFromDateTime = generateFromDateTime.AddMinutes(intervalMin);
-                notifications.Add(new Notification(guid, generateFromDateTime));
-                switch (action)
+                generateFromDateTime = generateFromDateTime.AddMinutes(LocalSettings.IntervalMin);
+                if (
+                    LocalSettings.NotificationMode == NotificationModeEnum.Schedule &&
+                    (TimeSpan.Compare(generateFromDateTime.TimeOfDay, (TimeSpan)LocalSettings.StartTime) < 0 ||
+                    TimeSpan.Compare(generateFromDateTime.TimeOfDay, (TimeSpan)LocalSettings.EndTime) > 0))
+                {
+                    continue; // skip schedule when not in schedule period
+                }
+                notifications.Add(new NotificationModel() { 
+                    ScheduledDateTime = generateFromDateTime,
+                    Tag = guid
+                });
+                switch (LocalSettings.Action)
                 {
                     case Actions.Notification:
                         SilentNotificationTemplate
-                            .AddText(notificatoinText)
+                            .AddText(LocalSettings.NotificationText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
@@ -90,7 +102,7 @@ namespace SharedClass
                         break;
                     case Actions.NotificationAndSound:
                         DefaultNotificationTemplate
-                            .AddText(notificatoinText)
+                            .AddText(LocalSettings.NotificationText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
@@ -101,22 +113,33 @@ namespace SharedClass
                         break;
                 }
             }
-            return notifications;
+            LocalSettings.Notifications = notifications;
         }
 
-        public static List<Notification> RemoveExpiredNotification(List<Notification> notifications)
+        public void RescheduleNotification()
         {
-            foreach (var n in notifications.ToList())
+            RemoveExpiredNotification();
+            RemoveScheduledNotification();
+            if (LocalSettings.IsTimerStarted)
+            {
+                ScheduleNotification();
+            }
+        }
+
+        public void RemoveExpiredNotification()
+        {
+            var notification = LocalSettings.Notifications;
+            foreach (var n in notification.ToList())
             {
                 if (DateTime.Now.CompareTo(n.ScheduledDateTime) >= 0)
                 {
-                    notifications.Remove(n);
+                    notification.Remove(n);
                 }
             }
-            return notifications;
+            LocalSettings.Notifications = notification;
         }
 
-        public static List<Notification> RemoveScheduledNotification()
+        public void RemoveScheduledNotification()
         {
             // Create the toast notifier
             ToastNotifierCompat notifier = ToastNotificationManagerCompat.CreateToastNotifier();
@@ -136,13 +159,12 @@ namespace SharedClass
             //    }
             //}
 
-            //#if DEBUG
             foreach (var item in scheduledToasts)
             {
                 notifier.RemoveFromSchedule(item);
             }
-            //#endif
-            return new List<Notification>();
+
+            LocalSettings.Notifications = new List<NotificationModel>();
         }
     }
 }

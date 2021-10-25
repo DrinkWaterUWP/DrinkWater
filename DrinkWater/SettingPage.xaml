@@ -13,22 +13,23 @@
         </Flyout>
     </Page.Resources>
     <ScrollViewer Width="500" Height="500">
-        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Top">
             <StackPanel Width="Auto" Height="Auto">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="500"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button x:Name="BackButton" Click="BackButton_Click"
                 Style="{StaticResource NavigationBackButtonNormalStyle}"
                 IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" 
                 ToolTipService.ToolTip="Back"/>
                 </Grid>
-                <Grid Margin="20,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Grid Margin="40,0" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -81,14 +82,14 @@
                             </FlyoutBase.AttachedFlyout>
                         </Button>
                     </Grid>
-                    <HyperlinkButton Grid.Row="3" Click="AdvanceSetting_Click">
+                    <HyperlinkButton Grid.Row="3" Click="AdvanceSetting_Click" Margin="0,0,0,20">
                         <TextBlock Text="Advance Setting"/>
                     </HyperlinkButton>
-                </Grid>
-                <TextBlock Margin="20" TextAlignment="Start" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Grid.Row="4" TextAlignment="Start" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,20">
                 Report a bug<LineBreak/>
                 <Hyperlink NavigateUri="https://github.com/DrinkWaterUWP/DrinkWater/issues">https://github.com/DrinkWaterUWP/DrinkWater/issues</Hyperlink>
-                </TextBlock>
+                    </TextBlock>
+                </Grid>
             </StackPanel>
         </RelativePanel>
     </ScrollViewer>

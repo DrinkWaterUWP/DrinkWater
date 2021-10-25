@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
+﻿using SharedClass;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using static SharedClass.Constant;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -26,14 +14,16 @@ namespace DrinkWater
     /// </summary>
     public sealed partial class AdvanceSettingPage : Page
     {
-        ApplicationDataContainer localSettings;
+        Notification Notification;
+        LocalSettings LocalSettings;
 
         public AdvanceSettingModel ViewModel { get; set; }
 
         public AdvanceSettingPage()
         {
             InitializeComponent();
-            localSettings = ApplicationData.Current.LocalSettings;
+            LocalSettings = new LocalSettings();
+            Notification = new Notification();
             ViewModel = new AdvanceSettingModel();
         }
 
@@ -53,20 +43,22 @@ namespace DrinkWater
             if ((bool)rdoDefault.IsChecked)
             {
                 ScheduleGrid.Visibility = Visibility.Collapsed;
-                if (localSettings.Values[NotificationMode].ToString() != NotificationModeEnum.Default.ToString())
+                if (LocalSettings.NotificationMode.ToString() != NotificationModeEnum.Default.ToString())
                 {
-                    localSettings.Values[NotificationMode] = NotificationModeEnum.Default.ToString();
+                    LocalSettings.NotificationMode = NotificationModeEnum.Default;
                     SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                    Notification.RescheduleNotification();
                 }
             }
             else if ((bool)rdoSchedule.IsChecked)
             {
                 ScheduleGrid.Visibility = Visibility.Visible;
-                if (localSettings.Values[NotificationMode].ToString() != NotificationModeEnum.Schedule.ToString() && StartSchedule.SelectedTime != null && EndSchedule.SelectedTime != null && TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) < 0)
-                {
-                    localSettings.Values[NotificationMode] = NotificationModeEnum.Schedule.ToString();
-                    SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
-                }
+                //if (LocalSettings.NotificationMode.ToString() != NotificationModeEnum.Schedule.ToString() && StartSchedule.SelectedTime != null && EndSchedule.SelectedTime != null && TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) < 0)
+                //{
+                //    LocalSettings.NotificationMode = NotificationModeEnum.Schedule;
+                //    SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                //    Notification.RescheduleNotification();
+                //}
             }
         }
 
@@ -88,30 +80,26 @@ namespace DrinkWater
             }
             else
             {
-                localSettings.Values[NotificationMode] = NotificationModeEnum.Schedule.ToString();
-                localSettings.Values[NotificationScheduleStartTime] = StartSchedule.SelectedTime?.ToString();
-                localSettings.Values[NotificationScheduleEndTime] = EndSchedule.SelectedTime?.ToString();
+                LocalSettings.NotificationMode = NotificationModeEnum.Schedule;
+                LocalSettings.StartTime = StartSchedule.SelectedTime;
+                LocalSettings.EndTime = EndSchedule.SelectedTime;
                 SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                Notification.RescheduleNotification();
             }
         }
     }
 
     public class AdvanceSettingModel
     {
-        ApplicationDataContainer localSettings;
+        LocalSettings LocalSettings;
         public bool rdoDefaultChecked { get; set; }
         public bool rdoScheduleChecked { get; set; }
         public TimeSpan startTime { get; set; }
         public TimeSpan endTime { get; set; }
         public AdvanceSettingModel()
         {
-            localSettings = ApplicationData.Current.LocalSettings;
-            if (localSettings.Values[NotificationMode] == null)
-            {
-                localSettings.Values[NotificationMode] = NotificationModeEnum.Default.ToString();
-            }
-            Enum.TryParse(typeof(NotificationModeEnum), localSettings.Values[NotificationMode].ToString(), out var mode);
-            switch (mode)
+            LocalSettings = new LocalSettings();
+            switch (LocalSettings.NotificationMode)
             {
                 case NotificationModeEnum.Default:
                     rdoDefaultChecked = true;
@@ -122,14 +110,8 @@ namespace DrinkWater
                 default:
                     break;
             }
-            if (localSettings.Values[NotificationScheduleStartTime] != null)
-            {
-                TimeSpan parsed;
-                TimeSpan.TryParse(localSettings.Values[NotificationScheduleStartTime].ToString(), out parsed);
-                startTime = parsed;
-                TimeSpan.TryParse(localSettings.Values[NotificationScheduleEndTime].ToString(), out parsed);
-                endTime = parsed;
-            }
+            startTime = (TimeSpan)LocalSettings.StartTime;
+            endTime = (TimeSpan)LocalSettings.EndTime;
         }
     }
 }

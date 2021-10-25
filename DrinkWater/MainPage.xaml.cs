@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using SharedClass;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
-using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,56 +16,16 @@ namespace DrinkWater
     public sealed partial class MainPage : Page
     {
         private const string CountdownTimerFormat = @"hh\:mm\:ss";
-        ApplicationDataContainer localSettings;
         Timer timer;
-        List<SharedClass.Notification> Notifications;
-
-        public int IntervalMin
-        {
-            get
-            {
-                if (localSettings.Values[ReminderIntervalMinKey] != null)
-                {
-                    int.TryParse(localSettings.Values[ReminderIntervalMinKey].ToString(), out int interval);
-                    return interval;
-                }
-                else
-                {
-                    return 60;
-                }
-            }
-        }
-
-        private Actions Action
-        {
-            get
-            {
-                if (localSettings.Values[ActionKey] != null)
-                {
-                    Enum.TryParse(localSettings.Values[ActionKey].ToString(), out Actions result);
-                    return result;
-                }
-                return Actions.Notification;
-            }
-        }
-
-        private string NotificationText
-        {
-            get
-            {
-                if (localSettings.Values[NotificationTextKey] != null)
-                {
-                    return localSettings.Values[NotificationTextKey].ToString();
-                }
-                return "Keep calm and drink water.";
-            }
-        }
+        Notification Notification;
+        LocalSettings LocalSettings;
 
         public MainPage()
         {
             InitializeComponent();
             Application.Current.Resuming += new EventHandler<object>(App_Resuming);
-            localSettings = ApplicationData.Current.LocalSettings;
+            LocalSettings = new LocalSettings();
+            Notification = new Notification();
         }
 
         private async void App_Resuming(object sender, object e)
@@ -101,48 +59,33 @@ namespace DrinkWater
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (localSettings.Values[IsFirstTimeKey] == null)
+            if (LocalSettings.IsFirstTime)
             {
                 SetDefaultValue();
                 RegisterBackgroundTask();
             }
 
-            HandleVersionChange();
-
-            Notifications = new List<SharedClass.Notification>();
-            if (localSettings.Values[NotificationKey] != null)
+            Notification.RemoveExpiredNotification();
+            if (LocalSettings.Notifications.Count > 0)
             {
-                Notifications = JsonConvert.DeserializeObject<List<SharedClass.Notification>>(localSettings.Values[NotificationKey].ToString());
-            }
-            Notifications = SharedClass.Notification.RemoveExpiredNotification(Notifications);
-            if (Notifications.Count > 0)
-            {
-                localSettings.Values[IsTimerStarted] = true;
+                LocalSettings.IsTimerStarted = true;
                 StopButton.Visibility = Visibility.Visible;
                 StartButton.Visibility = Visibility.Collapsed;
             }
             else
             {
-                localSettings.Values[IsTimerStarted] = false;
+                LocalSettings.IsTimerStarted = false;
                 StopButton.Visibility = Visibility.Collapsed;
                 StartButton.Visibility = Visibility.Visible;
             }
         }
 
-        private void HandleVersionChange()
-        {
-            if (localSettings.Values[NotificationTextKey] == null)
-            {
-                localSettings.Values[NotificationTextKey] = "Keep calm and drink water.";
-            }
-        }
-
         private DateTime? GetNextScheduledNotificationDateTime()
         {
-            Notifications = SharedClass.Notification.RemoveExpiredNotification(Notifications);
-            if (Notifications.Count > 0)
+            Notification.RemoveExpiredNotification();
+            if (LocalSettings.Notifications.Count > 0)
             {
-                return Notifications[0].ScheduledDateTime;
+                return LocalSettings.Notifications[0].ScheduledDateTime;
             }
             return null;
         }
@@ -182,20 +125,18 @@ namespace DrinkWater
 
         private void SetDefaultValue()
         {
-            localSettings.Values[IsFirstTimeKey] = false;
-            localSettings.Values[IsTimerStarted] = false;
-            localSettings.Values[ActionKey] = Actions.NotificationAndSound.ToString();
-            localSettings.Values[ReminderIntervalMinKey] = 60;
+            LocalSettings.IsFirstTime = false;
+            LocalSettings.IsTimerStarted = false;
+            LocalSettings.Action = Actions.NotificationAndSound;
+            LocalSettings.IntervalMin = 60;
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            localSettings.Values[IsTimerStarted] = true;
+            LocalSettings.IsTimerStarted = true;
             StopButton.Visibility = Visibility.Visible;
             StartButton.Visibility = Visibility.Collapsed;
-            Notifications = SharedClass.Notification.RemoveExpiredNotification(Notifications);
-            Notifications = SharedClass.Notification.ScheduleNotification(Notifications, IntervalMin, Action, NotificationText);
-            localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
+            Notification.ScheduleNotification();
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
@@ -217,7 +158,7 @@ namespace DrinkWater
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    TimerCountdown.Text = TimeSpan.FromMinutes(IntervalMin).ToString(CountdownTimerFormat);
+                    TimerCountdown.Text = TimeSpan.FromMinutes(LocalSettings.IntervalMin).ToString(CountdownTimerFormat);
                 }
                 );
             }
@@ -225,10 +166,8 @@ namespace DrinkWater
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            localSettings.Values[IsTimerStarted] = false;
-
-            Notifications = SharedClass.Notification.RemoveScheduledNotification();
-            localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
+            LocalSettings.IsTimerStarted = false;
+            Notification.RemoveScheduledNotification();
 
             StopButton.Visibility = Visibility.Collapsed;
             StartButton.Visibility = Visibility.Visible;

@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
-using SharedClass;
+﻿using SharedClass;
 using System.Collections.Generic;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
-using static SharedClass.Constant;
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace DrinkWater
@@ -16,8 +12,11 @@ namespace DrinkWater
     /// </summary>
     public sealed partial class NotificationPage : Page
     {
-        public List<Notification> Notifications;
-        ApplicationDataContainer localSettings;
+        public List<NotificationModel> Notifications;
+
+
+        Notification Notification;
+        LocalSettings LocalSettings;
 
         public bool HasNoItems
         {
@@ -29,16 +28,12 @@ namespace DrinkWater
 
         public NotificationPage()
         {
-            this.InitializeComponent();
-            localSettings = ApplicationData.Current.LocalSettings;
+            InitializeComponent();
+            Notification = new Notification();
+            LocalSettings = new LocalSettings();
+            Notification.RemoveExpiredNotification();
+            Notifications = LocalSettings.Notifications;
             DataContext = this;
-            Notifications = new List<Notification>();
-            if (localSettings.Values[NotificationKey] != null)
-            {
-                Notifications = JsonConvert.DeserializeObject<List<Notification>>(localSettings.Values[NotificationKey].ToString());
-                Notifications = Notification.RemoveExpiredNotification(Notifications);
-                localSettings.Values[NotificationKey] = JsonConvert.SerializeObject(Notifications);
-            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
