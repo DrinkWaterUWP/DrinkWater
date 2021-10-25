@@ -66,15 +66,17 @@ namespace DrinkWater
             }
 
             Notification.RemoveExpiredNotification();
-            if (LocalSettings.Notifications.Count > 0)
+            if (LocalSettings.IsTimerStarted)
             {
-                LocalSettings.IsTimerStarted = true;
                 StopButton.Visibility = Visibility.Visible;
                 StartButton.Visibility = Visibility.Collapsed;
+                if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && LocalSettings.Notifications.Count == 0)
+                {
+                    NotificationModeMessage.Text = $"You have schedule to send notification\nfrom {DateTime.Today.Add((TimeSpan)LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add((TimeSpan)LocalSettings.EndTime):hh:mm tt}"; 
+                }
             }
             else
             {
-                LocalSettings.IsTimerStarted = false;
                 StopButton.Visibility = Visibility.Collapsed;
                 StartButton.Visibility = Visibility.Visible;
             }
