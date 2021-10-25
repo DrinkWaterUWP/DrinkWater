@@ -158,7 +158,14 @@ namespace SharedClass
         {
             get
             {
-                return (bool)localSettings.Values[IsTimerStartedKey];
+                if (localSettings.Values[IsFirstTimeKey] == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return (bool)localSettings.Values[IsTimerStartedKey];
+                }
             }
             set
             {
