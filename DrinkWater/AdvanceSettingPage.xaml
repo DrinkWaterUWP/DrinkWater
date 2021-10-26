@@ -12,9 +12,9 @@
             <TextBlock Text="Saved!"></TextBlock>
         </Flyout>
     </Page.Resources>
-    <ScrollViewer Width="500" Height="500">
-        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Top">
-            <StackPanel>
+    <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center"  Width="500" Height="Auto">
+        <ScrollViewer>
+            <StackPanel Height="450">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -49,11 +49,15 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Margin="0, 10">
-                        Notification mode
+                        <TextBlock Grid.Row="0" Margin="0,10,10,0">
+                    Notification Schedule
                         </TextBlock>
-                        <RadioButton Grid.Row="1" x:Name="rdoDefault" Content="Default" GroupName="Notification mode" Checked="NotificationModeRadioButton_Checked" IsChecked="{x:Bind ViewModel.rdoDefaultChecked, Mode=TwoWay}"></RadioButton>
-                        <RadioButton Grid.Row="2" x:Name="rdoSchedule" Content="Schedule" GroupName="Notification mode" Checked="NotificationModeRadioButton_Checked" IsChecked="{x:Bind ViewModel.rdoScheduleChecked, Mode=TwoWay}" Margin="0,0,0,20"></RadioButton>
+                        <TextBlock Grid.Row="1" Margin="0,10,10,10" FontSize="12">
+                    You will only receive notification on period you select.
+                        </TextBlock>
+                        <ToggleSwitch Grid.Row="2" x:Name="ScheduleToggleSwitch" Header="" Toggled="ScheduleToggle_Toggled" Margin="0,0,0,20" IsOn="{x:Bind ViewModel.scheduleToggleSwitchOn, Mode=TwoWay}"/>
+                        <!--<RadioButton Grid.Row="1" x:Name="rdoDefault" Content="Default" GroupName="Notification mode" Checked="NotificationModeRadioButton_Checked" IsChecked="{x:Bind ViewModel.rdoDefaultChecked, Mode=TwoWay}"></RadioButton>
+                        <RadioButton Grid.Row="2" x:Name="rdoSchedule" Content="Schedule" GroupName="Notification mode" Checked="NotificationModeRadioButton_Checked" IsChecked="{x:Bind ViewModel.rdoScheduleChecked, Mode=TwoWay}" Margin="0,0,0,20"></RadioButton>-->
                     </Grid>
                 </Grid>
                 <Grid Margin="40,0" x:Name="ScheduleGrid" Visibility="Visible">
@@ -96,6 +100,6 @@
                     </Button>
                 </Grid>
             </StackPanel>
-        </RelativePanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </RelativePanel>
 </Page>

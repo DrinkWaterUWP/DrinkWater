@@ -1,5 +1,6 @@
 ﻿using SharedClass;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -29,16 +30,19 @@ namespace DrinkWater
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-
+            if (!ViewModel.scheduleToggleSwitchOn)
+            {
+                ScheduleGrid.Visibility = Visibility.Collapsed;
+            }
         }
 
         private async void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-            if ((bool)rdoSchedule.IsChecked && TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) < 0 &&
+            if (ScheduleToggleSwitch.IsOn && TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) < 0 &&
                 (LocalSettings.NotificationMode.ToString() != NotificationModeEnum.Schedule.ToString() ||
-                TimeSpan.Compare((TimeSpan)LocalSettings.StartTime, (TimeSpan)StartSchedule.SelectedTime) != 0 ||
-                TimeSpan.Compare((TimeSpan)LocalSettings.EndTime, (TimeSpan)EndSchedule.SelectedTime) != 0))
+                TimeSpan.Compare(LocalSettings.StartTime, (TimeSpan)StartSchedule.SelectedTime) != 0 ||
+                TimeSpan.Compare(LocalSettings.EndTime, (TimeSpan)EndSchedule.SelectedTime) != 0))
             {
                 ContentDialog unsavedSettingDialog = new ContentDialog
                 {
@@ -53,6 +57,7 @@ namespace DrinkWater
                 if (result == ContentDialogResult.Primary)
                 {
                     SaveScheduleSetting();
+                    await Task.Delay(1000);
                     rootFrame.GoBack();
                 }
                 else
@@ -66,19 +71,19 @@ namespace DrinkWater
             }
         }
 
-        private void NotificationModeRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void ScheduleToggle_Toggled(object sender, RoutedEventArgs e)
         {
-            if ((bool)rdoDefault.IsChecked)
+            if (!ScheduleToggleSwitch.IsOn)
             {
                 ScheduleGrid.Visibility = Visibility.Collapsed;
                 if (LocalSettings.NotificationMode.ToString() != NotificationModeEnum.Default.ToString())
                 {
                     LocalSettings.NotificationMode = NotificationModeEnum.Default;
-                    SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
+                    SaveSuccessfullyFlyout.ShowAt(SaveScheduleButton);
                     Notification.RescheduleNotification();
                 }
             }
-            else if ((bool)rdoSchedule.IsChecked)
+            else if (ScheduleToggleSwitch.IsOn)
             {
                 ScheduleGrid.Visibility = Visibility.Visible;
                 //if (LocalSettings.NotificationMode.ToString() != NotificationModeEnum.Schedule.ToString() && StartSchedule.SelectedTime != null && EndSchedule.SelectedTime != null && TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) < 0)
@@ -115,8 +120,7 @@ namespace DrinkWater
     public class AdvanceSettingModel
     {
         LocalSettings LocalSettings;
-        public bool rdoDefaultChecked { get; set; }
-        public bool rdoScheduleChecked { get; set; }
+        public bool scheduleToggleSwitchOn { get; set; }
         public TimeSpan startTime { get; set; }
         public TimeSpan endTime { get; set; }
         public AdvanceSettingModel()
@@ -125,16 +129,16 @@ namespace DrinkWater
             switch (LocalSettings.NotificationMode)
             {
                 case NotificationModeEnum.Default:
-                    rdoDefaultChecked = true;
+                    scheduleToggleSwitchOn = false;
                     break;
                 case NotificationModeEnum.Schedule:
-                    rdoScheduleChecked = true;
+                    scheduleToggleSwitchOn = true;
                     break;
                 default:
                     break;
             }
-            startTime = (TimeSpan)LocalSettings.StartTime;
-            endTime = (TimeSpan)LocalSettings.EndTime;
+            startTime = LocalSettings.StartTime;
+            endTime = LocalSettings.EndTime;
         }
     }
 }

@@ -56,6 +56,7 @@ namespace SharedClass
                 if (lastNotificationScheduledDateTime.CompareTo(targetNotificationScheduledDateTime) >= 0)
                 {
                     // target scheduled met, no need to schedule
+                    return;
                 }
                 else
                 {

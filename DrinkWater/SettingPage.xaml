@@ -9,12 +9,12 @@
     Loaded="Page_Loaded">
     <Page.Resources>
         <Flyout x:Name="SaveSuccessfullyFlyout">
-            <TextBlock Text="Setting saved successfully."></TextBlock>
+            <TextBlock Text="Saved!"></TextBlock>
         </Flyout>
     </Page.Resources>
-    <ScrollViewer Width="500" Height="500">
-        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Top">
-            <StackPanel Width="Auto" Height="Auto">
+    <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Height="Auto">
+        <ScrollViewer>
+            <StackPanel Height="450">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -91,6 +91,6 @@
                     </TextBlock>
                 </Grid>
             </StackPanel>
-        </RelativePanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </RelativePanel>
 </Page>

@@ -12,61 +12,60 @@
         <local:VisibleWhenZeroConverter x:Name="VisibleWhenZeroConverter" x:Key="VisibleWhenZeroConverter"></local:VisibleWhenZeroConverter>
     </Page.Resources>
 
-    <ScrollViewer Width="500" Height="500">
-        <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Top">
-        <StackPanel>
-            <Grid Width="500">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="350"/>
-                </Grid.RowDefinitions>
+    <RelativePanel HorizontalAlignment="Center" VerticalAlignment="Center"  Width="500" Height="Auto">
+        <ScrollViewer>
+            <StackPanel Height="450">
+                <Grid Width="500">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="350"/>
+                    </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                <Button x:Name="BackButton" Click="BackButton_Click"
+                    <Button x:Name="BackButton" Click="BackButton_Click"
                 Style="{StaticResource NavigationBackButtonNormalStyle}"
                 IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" 
                 ToolTipService.ToolTip="Back"/>
 
-                <Button x:Name="InfoButton" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Style="{StaticResource AccentButtonStyle}" Click="InfoButton_Click" ToolTipService.ToolTip="Information">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;"/>
-                    <Button.Background>
-                        <SolidColorBrush Opacity="0"/>
-                    </Button.Background>
-                </Button>
+                    <Button x:Name="InfoButton" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Style="{StaticResource AccentButtonStyle}" Click="InfoButton_Click" ToolTipService.ToolTip="Information">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE946;"/>
+                        <Button.Background>
+                            <SolidColorBrush Opacity="0"/>
+                        </Button.Background>
+                    </Button>
 
-                <ListView Grid.Row="1" Grid.ColumnSpan="2" x:Name="ScheduledNotification" ItemsSource="{x:Bind Notifications}"
+                    <ListView Grid.Row="1" Grid.ColumnSpan="2" x:Name="ScheduledNotification" ItemsSource="{x:Bind Notifications}"
                           ScrollViewer.VerticalScrollBarVisibility="Visible"
                           ScrollViewer.IsVerticalRailEnabled="True"
                           VerticalAlignment="Stretch"
                           ScrollViewer.VerticalScrollMode="Enabled"
                           HorizontalAlignment="Center" Margin="0,0,0,0">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Height="Auto" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Converter={StaticResource IndexConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="10"></TextBlock>
-                                    <TextBlock Grid.Column="1" Text="{Binding ScheduledDateTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="10"/>
-                                </Grid>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.Header>
-                        <TextBlock Margin="0,20,0,0" Visibility="{Binding HasNoItems, Mode=TwoWay, Converter={StaticResource VisibleWhenZeroConverter}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Height="Auto" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Converter={StaticResource IndexConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="10"></TextBlock>
+                                        <TextBlock Grid.Column="1" Text="{Binding ScheduledDateTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="10"/>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Header>
+                            <TextBlock Margin="0,20,0,0" Visibility="{Binding HasNoItems, Mode=TwoWay, Converter={StaticResource VisibleWhenZeroConverter}}">
                             There is no scheduled notification, please start the timer first.
-                        </TextBlock>
-                    </ListView.Header>
-                </ListView>
-            </Grid>
-        </StackPanel>
+                            </TextBlock>
+                        </ListView.Header>
+                    </ListView>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </RelativePanel>
-    </ScrollViewer>
-
 </Page>

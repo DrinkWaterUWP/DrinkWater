@@ -75,7 +75,8 @@ namespace DrinkWater
                 StartButton.Visibility = Visibility.Collapsed;
                 if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && Notifications.Count == 0)
                 {
-                    NotificationModeMessage.Text = $"You have schedule to send notification\nfrom {DateTime.Today.Add((TimeSpan)LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add((TimeSpan)LocalSettings.EndTime):hh:mm tt}"; 
+                    NotificationModeMessage.Text = $"You have scheduled to send a notification\n" +
+                        $"from {DateTime.Today.Add(LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add(LocalSettings.EndTime):hh:mm tt}"; 
                 }
             }
             else

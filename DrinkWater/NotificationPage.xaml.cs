@@ -49,10 +49,10 @@ namespace DrinkWater
         {
             new ContentDialog
             {
-                Content = 
-                "Drink water notification will show below.\n" +
-                "Background task will run every 15 minutes to schedule notification.\n" +
-                "Stop the timer if you wish to not receiving notification anymore.",
+                Content =
+                "Your drink water notification will show below.\n" +
+                "A background task will run every 15 minutes to schedule notification.\n" +
+                "Stop the timer if you wish to stop receiving notifications.",
                 CloseButtonText = "Close"
             }.ShowAsync();
         }
