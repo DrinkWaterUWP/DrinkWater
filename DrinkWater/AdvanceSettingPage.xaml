@@ -53,11 +53,9 @@
                     Notification Schedule
                         </TextBlock>
                         <TextBlock Grid.Row="1" Margin="0,10,10,10" FontSize="12">
-                    You will only receive notification on period you select.
+                    Drink water notification will only show in the selected period.
                         </TextBlock>
                         <ToggleSwitch Grid.Row="2" x:Name="ScheduleToggleSwitch" Header="" Toggled="ScheduleToggle_Toggled" Margin="0,0,0,20" IsOn="{x:Bind ViewModel.scheduleToggleSwitchOn, Mode=TwoWay}"/>
-                        <!--<RadioButton Grid.Row="1" x:Name="rdoDefault" Content="Default" GroupName="Notification mode" Checked="NotificationModeRadioButton_Checked" IsChecked="{x:Bind ViewModel.rdoDefaultChecked, Mode=TwoWay}"></RadioButton>
-                        <RadioButton Grid.Row="2" x:Name="rdoSchedule" Content="Schedule" GroupName="Notification mode" Checked="NotificationModeRadioButton_Checked" IsChecked="{x:Bind ViewModel.rdoScheduleChecked, Mode=TwoWay}" Margin="0,0,0,20"></RadioButton>-->
                     </Grid>
                 </Grid>
                 <Grid Margin="40,0" x:Name="ScheduleGrid" Visibility="Visible">
@@ -74,22 +72,12 @@
                             <TextBlock Text="Start time" Margin="0,0,0,0">
                             </TextBlock>
                         </TimePicker.Header>
-                        <FlyoutBase.AttachedFlyout>
-                            <Flyout>
-                                <TextBlock Text="Start time is required." />
-                            </Flyout>
-                        </FlyoutBase.AttachedFlyout>
                     </TimePicker>
                     <TimePicker Grid.Row="1" x:Name="EndSchedule" SelectedTime="{x:Bind ViewModel.endTime}" Margin="0,0,0,20" ClockIdentifier="12HourClock" HorizontalAlignment="Left">
                         <TimePicker.Header>
                             <TextBlock Text="End time" Margin="0,0,0,0">
                             </TextBlock>
                         </TimePicker.Header>
-                        <FlyoutBase.AttachedFlyout>
-                            <Flyout>
-                                <TextBlock Text="End time is required." />
-                            </Flyout>
-                        </FlyoutBase.AttachedFlyout>
                     </TimePicker>
                     <Button x:Name="SaveScheduleButton" Margin="0,0,0,20" Grid.Row="2" Content="Save" HorizontalAlignment="Left" Click="SaveScheduleButton_Click">
                         <FlyoutBase.AttachedFlyout>

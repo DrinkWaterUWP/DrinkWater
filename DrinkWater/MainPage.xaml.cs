@@ -73,11 +73,7 @@ namespace DrinkWater
             {
                 StopButton.Visibility = Visibility.Visible;
                 StartButton.Visibility = Visibility.Collapsed;
-                if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && Notifications.Count == 0)
-                {
-                    NotificationModeMessage.Text = $"You have scheduled to send a notification\n" +
-                        $"from {DateTime.Today.Add(LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add(LocalSettings.EndTime):hh:mm tt}"; 
-                }
+                ShowMessageForScheduleMode();
             }
             else
             {
@@ -144,6 +140,7 @@ namespace DrinkWater
             StopButton.Visibility = Visibility.Visible;
             StartButton.Visibility = Visibility.Collapsed;
             Notification.ScheduleNotification();
+            ShowMessageForScheduleMode();
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
@@ -188,6 +185,15 @@ namespace DrinkWater
         private void NotificationButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(NotificationPage), null);
+        }
+
+        private void ShowMessageForScheduleMode()
+        {
+            if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && Notifications.Count == 0)
+            {
+                NotificationModeMessage.Text = $"You have scheduled to show drink water notification\n" +
+                    $"from {DateTime.Today.Add(LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add(LocalSettings.EndTime):hh:mm tt}";
+            }
         }
     }
 }

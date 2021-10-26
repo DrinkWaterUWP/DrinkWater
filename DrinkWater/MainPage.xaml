@@ -42,7 +42,7 @@
                     </Button.Background>
                 </Button>
             </Grid>
-            <TextBlock Margin="0,20,0,0" x:Name="NotificationModeMessage" TextAlignment="Center">
+            <TextBlock x:Name="NotificationModeMessage" TextAlignment="Center">
             </TextBlock>
         </StackPanel>
     </RelativePanel>

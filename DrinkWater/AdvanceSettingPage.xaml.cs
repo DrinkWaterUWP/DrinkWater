@@ -6,13 +6,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using static SharedClass.Constant;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace DrinkWater
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class AdvanceSettingPage : Page
     {
         Notification Notification;
@@ -86,12 +81,6 @@ namespace DrinkWater
             else if (ScheduleToggleSwitch.IsOn)
             {
                 ScheduleGrid.Visibility = Visibility.Visible;
-                //if (LocalSettings.NotificationMode.ToString() != NotificationModeEnum.Schedule.ToString() && StartSchedule.SelectedTime != null && EndSchedule.SelectedTime != null && TimeSpan.Compare((TimeSpan)StartSchedule.SelectedTime, (TimeSpan)EndSchedule.SelectedTime) < 0)
-                //{
-                //    LocalSettings.NotificationMode = NotificationModeEnum.Schedule;
-                //    SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
-                //    Notification.RescheduleNotification();
-                //}
             }
         }
 
