@@ -52,7 +52,7 @@ namespace DrinkWater
                 if (result == ContentDialogResult.Primary)
                 {
                     SaveScheduleSetting();
-                    await Task.Delay(1000);
+                    await Task.Delay(500);
                     rootFrame.GoBack();
                 }
                 else

@@ -31,7 +31,7 @@
                 <Button x:Name="StartButton" Margin="0, 10" Content="Start Timer" Grid.Row="1" Grid.Column="1" Click="StartButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <FlyoutBase.AttachedFlyout>
                         <Flyout Placement="Bottom">
-                            <TextBlock>Timer started successfully.<LineBreak/>You may close this window</TextBlock>
+                            <TextBlock>Timer started.<LineBreak/>You may close this window.</TextBlock>
                         </Flyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
