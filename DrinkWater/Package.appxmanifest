@@ -9,7 +9,7 @@
   <Identity
     Name="15722UsefulApp.DrinkWater"
     Publisher="CN=BF18CC4F-2F9D-43F9-9BF7-0E949EE3057D"
-    Version="1.0.24.0" />
+    Version="1.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="c4d813d0-37aa-42a2-80ed-e51d5539ee59" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -38,7 +38,7 @@
         Description="DrinkWater"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0076D7"/>
       </uap:VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.ScheduleNotification">

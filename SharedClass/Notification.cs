@@ -40,7 +40,7 @@ namespace SharedClass
                 lastNotificationScheduledDateTime = notifications[notifications.Count - 1].ScheduledDateTime;
                 if (intervalMin >= 15)
                 {
-                    targetNotificationScheduledDateTime = notifications[0].ScheduledDateTime.AddMinutes(intervalMin * 2);
+                    targetNotificationScheduledDateTime = notifications[0].ScheduledDateTime.AddMinutes(intervalMin);
                 }
                 else if (intervalMin > 0 && intervalMin < 15)
                 {
@@ -62,10 +62,18 @@ namespace SharedClass
                 {
                     generateFromDateTime = lastNotificationScheduledDateTime;
                     DateTime temp = lastNotificationScheduledDateTime;
+                    temp = temp.AddMinutes(intervalMin);
                     while (temp.CompareTo(targetNotificationScheduledDateTime) < 0)
                     {
-                        numberOfNotification++;
+                        if (
+                            notificationMode == NotificationModeEnum.Schedule &&
+                            (TimeSpan.Compare(temp.TimeOfDay, startTime) < 0 ||
+                            TimeSpan.Compare(temp.TimeOfDay, endTime) > 0))
+                        {
+                            break; // skip schedule when not in schedule period
+                        }
                         temp = temp.AddMinutes(intervalMin);
+                        numberOfNotification++;
                     }
                 }
 
@@ -92,9 +100,10 @@ namespace SharedClass
                     (TimeSpan.Compare(generateFromDateTime.TimeOfDay, startTime) < 0 ||
                     TimeSpan.Compare(generateFromDateTime.TimeOfDay, endTime) > 0))
                 {
-                    continue; // skip schedule when not in schedule period
+                    break; // skip schedule when not in schedule period
                 }
-                notifications.Add(new NotificationModel() { 
+                notifications.Add(new NotificationModel()
+                {
                     ScheduledDateTime = generateFromDateTime,
                     Tag = guid
                 });
@@ -155,19 +164,6 @@ namespace SharedClass
 
             // Get the list of scheduled toasts that haven't appeared yet
             IReadOnlyList<ScheduledToastNotification> scheduledToasts = notifier.GetScheduledToastNotifications();
-
-            //foreach (var notification in Notifications.ToList())
-            //{
-            //    // Find our scheduled toast we want to cancel
-            //    var toRemove = scheduledToasts.FirstOrDefault(i => i.Tag == notification.Tag);
-            //    if (toRemove != null)
-            //    {
-            //        // And remove it from the schedule
-            //        notifier.RemoveFromSchedule(toRemove);
-            //        Notifications.Remove(notification);
-            //    }
-            //}
-
             foreach (var item in scheduledToasts)
             {
                 notifier.RemoveFromSchedule(item);

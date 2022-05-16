@@ -20,7 +20,6 @@ namespace DrinkWater
         Timer timer;
         Notification Notification;
         LocalSettings LocalSettings;
-        List<NotificationModel> Notifications;
 
         public MainPage()
         {
@@ -28,7 +27,6 @@ namespace DrinkWater
             Application.Current.Resuming += new EventHandler<object>(App_Resuming);
             LocalSettings = new LocalSettings();
             Notification = new Notification();
-            Notifications = LocalSettings.Notifications;
         }
 
         private async void App_Resuming(object sender, object e)
@@ -85,10 +83,9 @@ namespace DrinkWater
         private DateTime? GetNextScheduledNotificationDateTime()
         {
             Notification.RemoveExpiredNotification();
-            Notifications = LocalSettings.Notifications;
-            if (Notifications.Count > 0)
+            if (LocalSettings.Notifications.Count > 0)
             {
-                return Notifications[0].ScheduledDateTime;
+                return LocalSettings.Notifications[0].ScheduledDateTime;
             }
             return null;
         }
@@ -144,7 +141,7 @@ namespace DrinkWater
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
-        public async void CheckStatus(Object stateInfo)
+        public async void CheckStatus(object stateInfo)
         {
             var scheduledDateTime = GetNextScheduledNotificationDateTime();
             if (scheduledDateTime != null)
@@ -189,7 +186,7 @@ namespace DrinkWater
 
         private void ShowMessageForScheduleMode()
         {
-            if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && Notifications.Count == 0)
+            if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && LocalSettings.Notifications.Count == 0)
             {
                 NotificationModeMessage.Text = $"You have scheduled to show drink water notification\n" +
                     $"from {DateTime.Today.Add(LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add(LocalSettings.EndTime):hh:mm tt}";
