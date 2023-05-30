@@ -27,7 +27,7 @@
                 IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" 
                 ToolTipService.ToolTip="Back"/>
                 </Grid>
-                <Grid Margin="40,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Grid Margin="20,0,20,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -38,20 +38,20 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TimePicker x:Name="RemindInterval" Grid.Row="0" Margin="0,10,0,20" Grid.ColumnSpan="2" ClockIdentifier="24HourClock" HorizontalAlignment="Left" Width="305" SelectedTimeChanged="RemindInterval_SelectedTimeChanged">
+                    <TimePicker x:Name="RemindInterval" Grid.Row="0" Margin="0,0,0,20" Grid.ColumnSpan="2" ClockIdentifier="24HourClock" HorizontalAlignment="Left" Width="400" SelectedTimeChanged="RemindInterval_SelectedTimeChanged">
                         <TimePicker.Header>
-                            <TextBlock Text="Time interval to drink water" Margin="0,0,0,0">
+                            <TextBlock Text="Choose how often you'd like to be reminded to drink water (Hour: Minute)" Margin="0,0,0,0" TextWrapping="WrapWholeWords">
                             </TextBlock>
                         </TimePicker.Header>
                         <FlyoutBase.AttachedFlyout>
                             <Flyout>
-                                <TextBlock Text="Please select at least 1 minute of time interval." />
+                                <TextBlock Text="Please choose a time interval of at least 1 minute." />
                             </Flyout>
                         </FlyoutBase.AttachedFlyout>
                     </TimePicker>
-                    <ComboBox x:Name="ActionComboBox" ItemsSource="{Binding ActionsItem}" Grid.Row="1" PlaceholderText="Select an action" Width="330" SelectionChanged="ActionComboBox_SelectionChanged" Margin="0,0,0,20">
+                    <ComboBox x:Name="ActionComboBox" ItemsSource="{Binding ActionsItem}" Grid.Row="1" PlaceholderText="Select an action" Width="400" SelectionChanged="ActionComboBox_SelectionChanged" Margin="0,0,0,20">
                         <ComboBox.Header>
-                            <TextBlock Text="Default notification sound">
+                            <TextBlock Text="Notification Sound">
                             </TextBlock>
                         </ComboBox.Header>
                         <FlyoutBase.AttachedFlyout>
@@ -60,7 +60,7 @@
                             </Flyout>
                         </FlyoutBase.AttachedFlyout>
                     </ComboBox>
-                    <Grid Grid.Row="2" Margin="0,0,0,20" >
+                    <Grid Grid.Row="2" Margin="0,0,0,20" Width="415" HorizontalAlignment="Left">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -70,7 +70,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="NotificationTextBox" LostFocus="NotificationTextBox_LostFocus">
                             <TextBox.Header>
-                                <TextBlock Text="Notification text">
+                                <TextBlock Text="Notification Text">
                                 </TextBlock>
                             </TextBox.Header>
                         </TextBox>
@@ -85,8 +85,8 @@
                     <HyperlinkButton Grid.Row="3" Click="AdvanceSetting_Click" Margin="0,0,0,20">
                         <TextBlock Text="Advance Setting"/>
                     </HyperlinkButton>
-                    <TextBlock Grid.Row="4" TextAlignment="Start" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,20">
-                Report a bug<LineBreak/>
+                    <TextBlock Grid.Row="4" TextAlignment="Start" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0">
+                Found a bug?<LineBreak/>
                 <Hyperlink NavigateUri="https://github.com/DrinkWaterUWP/DrinkWater/issues">https://github.com/DrinkWaterUWP/DrinkWater/issues</Hyperlink>
                     </TextBlock>
                 </Grid>

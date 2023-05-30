@@ -59,8 +59,8 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.Header>
-                            <TextBlock Margin="0,20,0,0" Visibility="{Binding HasNoItems, Mode=TwoWay, Converter={StaticResource VisibleWhenZeroConverter}}">
-                            There is no scheduled notification, please start the timer first.
+                            <TextBlock TextWrapping="WrapWholeWords" Margin="0,0,0,0" Visibility="{Binding HasNoItems, Mode=TwoWay, Converter={StaticResource VisibleWhenZeroConverter}}">
+                            No scheduled notifications found.<LineBreak/>To begin receiving notification,<LineBreak/>please start the timer by clicking the "Start" button.
                             </TextBlock>
                         </ListView.Header>
                     </ListView>

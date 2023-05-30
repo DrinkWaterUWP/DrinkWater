@@ -41,8 +41,8 @@ namespace DrinkWater
             {
                 ContentDialog unsavedSettingDialog = new ContentDialog
                 {
-                    Title = "Setting modified",
-                    Content = "Do you want to save it?",
+                    Title = "Save changes?",
+                    Content = "Your changes have not been saved. Would you like to save them before leaving?",
                     PrimaryButtonText = "Save",
                     CloseButtonText = "Discard"
                 };

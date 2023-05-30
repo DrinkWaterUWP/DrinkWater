@@ -188,7 +188,8 @@ namespace DrinkWater
         {
             if (LocalSettings.NotificationMode == NotificationModeEnum.Schedule && LocalSettings.Notifications.Count == 0)
             {
-                NotificationModeMessage.Text = $"You have scheduled to show drink water notification\n" +
+                NotificationModeMessage.Text = $"Notifications are currently disabled\n" +
+                    "because you have configured to receive notifications\n" +
                     $"from {DateTime.Today.Add(LocalSettings.StartTime):hh:mm tt} to {DateTime.Today.Add(LocalSettings.EndTime):hh:mm tt}";
             }
         }

@@ -17,8 +17,8 @@ namespace DrinkWater
 
         public List<ComboBoxPairs> ActionsItem { get; set; } = new List<ComboBoxPairs>
             {
-                new ComboBoxPairs("Off", Actions.Notification.ToString()),
-                new ComboBoxPairs("On", Actions.NotificationAndSound.ToString()),
+                new ComboBoxPairs("Disable Sound", Actions.Notification.ToString()),
+                new ComboBoxPairs("Enable Sound", Actions.NotificationAndSound.ToString()),
                 //new ComboBoxPairs("Notification with custom sound", Actions.NotificationAndCustomSound.ToString())
             };
 
