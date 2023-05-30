@@ -34,7 +34,6 @@ namespace SharedClass
             get
             {
                 return new ToastContentBuilder()
-                        .AddText("Drink Water")
                         .SetToastDuration(ToastDuration.Short)
                         .SetToastScenario(ToastScenario.Default);
             }
@@ -44,7 +43,6 @@ namespace SharedClass
             get
             {
                 return new ToastContentBuilder()
-                        .AddText("Drink Water")
                         .AddAudio(new Uri("ms-appx:///Assets/Audio/no_sound.mp3"))
                         .SetToastDuration(ToastDuration.Short)
                         .SetToastScenario(ToastScenario.Default);
