@@ -9,7 +9,6 @@ namespace SharedClass
         {
             Notification,
             NotificationAndSound,
-            NotificationAndCustomSound
         }
         public enum NotificationModeEnum
         {
@@ -29,24 +28,17 @@ namespace SharedClass
         public static string ScheduleNotificationTask1 { get { return "ScheduleNotificationTask1"; } }
         public static string ScheduleNotificationTaskEntry1 { get { return "BackgroundTask.ScheduleNotification"; } }
         public static string IsFirstTimeKey { get { return "IsFirstTime"; } }
-        public static ToastContentBuilder DefaultNotificationTemplate
+        public static ToastContentBuilder DefaultNotificationTemplate(string text)
         {
-            get
-            {
-                return new ToastContentBuilder()
-                        .SetToastDuration(ToastDuration.Short)
-                        .SetToastScenario(ToastScenario.Default);
-            }
+            return new ToastContentBuilder()
+                    .AddText(text)
+                    .SetToastDuration(ToastDuration.Short)
+                    .SetToastScenario(ToastScenario.Default);
         }
-        public static ToastContentBuilder SilentNotificationTemplate
+        public static ToastContentBuilder SilentNotificationTemplate(string text)
         {
-            get
-            {
-                return new ToastContentBuilder()
-                        .AddAudio(new Uri("ms-appx:///Assets/Audio/no_sound.mp3"))
-                        .SetToastDuration(ToastDuration.Short)
-                        .SetToastScenario(ToastScenario.Default);
-            }
+            return DefaultNotificationTemplate(text)
+                    .AddAudio(new Uri("ms-appx:///Assets/Audio/no_sound.mp3"));
         }
     }
 }

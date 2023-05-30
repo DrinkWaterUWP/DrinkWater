@@ -56,7 +56,7 @@ namespace SharedClass
         {
             get
             {
-                if (localSettings.Values[NotificationTextKey] != null)
+                if (localSettings.Values[NotificationTextKey] != null && !string.IsNullOrWhiteSpace(localSettings.Values[NotificationTextKey].ToString()))
                 {
                     return localSettings.Values[NotificationTextKey].ToString();
                 }

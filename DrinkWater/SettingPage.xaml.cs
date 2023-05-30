@@ -56,16 +56,14 @@ namespace DrinkWater
             switch (action)
             {
                 case Actions.Notification:
-                    SilentNotificationTemplate
-                        .AddText(LocalSettings.NotificationText)
+                    SilentNotificationTemplate(LocalSettings.NotificationText)
                         .Show(toast =>
                         {
                             toast.ExpirationTime = DateTime.Now.AddSeconds(5);
                         });
                     break;
                 case Actions.NotificationAndSound:
-                    DefaultNotificationTemplate
-                        .AddText(LocalSettings.NotificationText)
+                    DefaultNotificationTemplate(LocalSettings.NotificationText)
                         .Show(toast =>
                         {
                             toast.ExpirationTime = DateTime.Now.AddSeconds(5);
@@ -117,6 +115,7 @@ namespace DrinkWater
             if (NotificationTextBox.Text != null && LocalSettings.NotificationText != NotificationTextBox.Text)
             {
                 LocalSettings.NotificationText = NotificationTextBox.Text;
+                NotificationTextBox.Text = LocalSettings.NotificationText;
                 SaveSuccessfullyFlyout.ShowAt((FrameworkElement)sender);
                 Notification.RescheduleNotification();
             }

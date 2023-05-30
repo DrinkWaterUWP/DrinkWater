@@ -110,8 +110,7 @@ namespace SharedClass
                 switch (action)
                 {
                     case Actions.Notification:
-                        SilentNotificationTemplate
-                            .AddText(notificationText)
+                        SilentNotificationTemplate(notificationText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
@@ -119,8 +118,7 @@ namespace SharedClass
                             });
                         break;
                     case Actions.NotificationAndSound:
-                        DefaultNotificationTemplate
-                            .AddText(notificationText)
+                        DefaultNotificationTemplate(notificationText)
                             .Schedule(generateFromDateTime, toast =>
                             {
                                 toast.Tag = guid;
